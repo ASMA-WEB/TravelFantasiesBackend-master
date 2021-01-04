@@ -1,0 +1,4 @@
+{
+  // "db": "mongodb://127.0.0.1/TravelFantasies",
+  "db": "mongodb+srv://Sadia:E70141C7@cluster0.2il5f.mongodb.net/test"
+}
