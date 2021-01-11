@@ -11,7 +11,7 @@ const { runInNewContext } = require("vm");
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "C:/Users/sidra/Desktop/Backend/travel/public/images/hotels");
+    cb(null, "uploads/");
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + file.originalname);
@@ -82,7 +82,7 @@ router.put("/:id", validatePackages, async (req, res) => {
   packages.Status = req.body.Status;
   packages.Image.data = fs.readFileSync(req.file.path);
   packages.Image.contentType = req.file.mimetype;
-  
+
   await packages.save();
   return res.send(packages);
 });
@@ -93,9 +93,12 @@ router.delete("/:id", async (req, res) => {
   return res.send("Packages has been Successfully Removed");
 });
 
+router.post("/", upload.array("photos", 5), async (req, res) => {
+  let imgPath = [];
+  req.files.forEach((n) => {
+    imgPath.push(n.path);
+  });
 
-router.post("/", async (req, res) => {
-  console.log('----Testing----', req.body);
   try {
     const packages = new Packages();
     console.log(req.body);
@@ -108,15 +111,14 @@ router.post("/", async (req, res) => {
     packages.AllowedPersons = req.body.AllowedPersons;
     packages.Location = req.body.Location;
     packages.Status = req.body.Status;
-    // packages.Image.data = fs.readFileSync(req.file.path);
-    // packages.Image.contentType = req.file.mimetype;
+    packages.Images = imgPath;
     packages.Ratings = 0;
-    await packages.save();
-    return res.send("data");
+    let data = await packages.save();
+    return res.send(data);
   } catch (error) {
     console.log(error);
     res.send(error.message);
   }
-  
+  res.send("success");
 });
 module.exports = router;

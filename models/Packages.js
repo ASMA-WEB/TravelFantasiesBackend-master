@@ -10,19 +10,15 @@ var PackagesSchema = mongoose.Schema({
   Meal: String,
   Hotel: String,
   no_of_days: Number,
-  AllowedPersons: Number, 
+  AllowedPersons: Number,
   Location: String,
   Status: {
     type: Boolean,
     enum: ["true", "false"],
   },
-   Images: {
-     data: Buffer,
-    contentType: String,
-   },
+  Images: [String],
   Facilities: String,
   Ratings: Number,
-  
 });
 
 var Packages = mongoose.model("Packages", PackagesSchema);
@@ -38,8 +34,7 @@ function validatePackages(data) {
     AllowedPersons: Joi.required(),
     Location: Joi.string().required(),
     Status: Joi.required(),
-    Ratings: Joi.number(),   
-    
+    Ratings: Joi.number(),
   });
   return schema.validate(data, { abortEarly: false });
 }
